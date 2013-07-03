@@ -15,8 +15,8 @@ Patch3: sherpa-2.0.beta-blackhat
 %define cms_cxxflags -O2 -std=c++0x
 %endif
 
-%if "%{?mpi_cms_cxx:set}" != "set"
-%define mpi_cms_cxx %{OPENMPI_ROOT}/bin/mpicxx
+%if "%{?cms_mpicxx:set}" != "set"
+%define cms_mpicxx ${OPENMPI_ROOT}/bin/mpic++
 %endif
 
 %prep
@@ -52,10 +52,11 @@ case %cmsplatf in
       AddOns/Analysis/Scripts/Makefile.in
   ;;
 esac
-
+echo %cms_mpicxx
 ./configure --prefix=%i --enable-analysis --disable-silent-rules --enable-mpi \
             --enable-hepmc2=$HEPMC_ROOT --enable-lhapdf=$LHAPDF_ROOT --enable-blackhat=$BLACKHAT_ROOT \
-            CXX="%cms_cxx" CXXFLAGS="-fuse-cxa-atexit $ARCH_CMSPLATF %cms_cxxflags -I$BLACKHAT_ROOT/include/ -I${OPENMPI_ROOT}/include/" LDFLAGS="-ldl -L$BLACKHAT_ROOT/lib/blackhat/ -L${OPENMPI_ROOT}/lib/ -L${OPENMPI_ROOT}/lib/openmpi/" MPICXX="%cms_mpi_cxx" 
+            CXX="%cms_cxx" MPICXX="%cms_mpicxx" CXXFLAGS="-fuse-cxa-atexit $ARCH_CMSPLATF %cms_cxxflags -I$BLACKHAT_ROOT/include/ -I$OPENMPI_ROOT/include/" LDFLAGS="-ldl -L$BLACKHAT_ROOT/lib/ -L$OPENMPI_ROOT/lib/ -lmpi -lmpi_cxx" 
+            #CXX="%cms_cxx" MPICXX=%cms_mpicxx CXXFLAGS="-fuse-cxa-atexit $ARCH_CMSPLATF %cms_cxxflags -I$BLACKHAT_ROOT/include/" LDFLAGS="-ldl -L$BLACKHAT_ROOT/lib/blackhat/"  
 
 %build
 # Fix up a configuration mistake coming from a test being confused
