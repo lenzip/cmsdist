@@ -16,6 +16,7 @@ cat << \EOF_TOOLFILE >%i/etc/scram.d/openmpi.xml
 <environment name="INCLUDE" default="$OPENMPI_BASE/include"/>
 </client>
 <runtime name="PATH" value="$OPENMPI_BASE/bin" type="path"/>
+<runtime name="OPAL_PREFIX" value="$OPENMPI_BASE" type="path"/>
 </tool>
 EOF_TOOLFILE
 
